@@ -1,0 +1,25 @@
+.Winput{
+    width: 25vw;
+    height:50vh;
+    display: flex;
+    flex-direction: column;
+    border:1px solid red;
+
+    p{
+        height: 15%;
+        
+    }
+
+    input{
+        height: 10%;;
+    }
+
+    textarea{
+        resize: none;
+        height: 80%;
+        border:1px solid blue;
+    }
+    button{
+        height:15%;
+    }
+}
