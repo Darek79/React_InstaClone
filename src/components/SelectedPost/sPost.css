@@ -1,0 +1,9 @@
+.sPost {
+	background-color: green;
+	width: 100vw;
+}
+.sPost button {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
