@@ -1,36 +1,46 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import getFavorites from "../../getFavorites";
+import axios from "axios";
 
-const FavModal = props => {
-	const [mstate, setStateModal] = useState({
-		favorites: []
-	});
+const ShowModal = props => {
+	const [showData, setData] = useState([]);
 
 	useEffect(() => {
-		console.log("fired");
-		getFavorites().then(res => {
-			setStateModal(() => {
-				return {
-					favorites: [...mstate.favorites, ...res]
-				};
+		axios
+			.get("https://swift-implement-218818.firebaseio.com/favorites.json")
+			.then(res => {
+				const arr = [];
+				console.log(res);
+				const data = res.data;
+				for (const key in data) {
+					arr.push({
+						id: data[key].id,
+						title: data[key].title,
+						pic: data[key].thumbnailUrl
+					});
+				}
+				const sliced = arr.slice(0, 5);
+				setData(sliced);
 			});
-		});
-	}, [mstate]);
+	}, []);
 
 	return (
-		<Modal isOpen={!!props.show} contentLabel="Fav Posts" ariaHideApp={false}>
-			{mstate.favorites.map(({ title, thumbnailUrl }) => {
-				console.log(mstate.favorites);
-				return (
-					<div>
-						<img src={thumbnailUrl} alt="profilePicture" />
-						<p>{title}</p>
-					</div>
-				);
-			})}
+		<Modal
+			isOpen={props.open}
+			onRequestClose={props.close}
+			contentLabel="Favorites"
+		>
+			<ul>
+				{showData.map(val => (
+					<li key={val.id}>{val.title}</li>
+				))}
+			</ul>
+
+			<button onClick={props.close}>close me</button>
 		</Modal>
 	);
 };
 
-export default FavModal;
+Modal.setAppElement("#root");
+
+export default ShowModal;

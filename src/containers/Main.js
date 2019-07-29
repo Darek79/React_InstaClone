@@ -3,7 +3,7 @@ import Posts from "../components/Posts/Posts";
 import SelectedPost from "../components/SelectedPost/SelectedPost";
 import FavModal from "../components/Modal/Modal";
 import getPhotos from "../getPhotos";
-import getFavorites from "../getFavorites";
+
 import database from "../database";
 import uuid from "uuid/v4";
 
@@ -15,7 +15,7 @@ class Main extends React.Component {
 		selectedPost: null,
 		err: false,
 		favs: 0,
-		show: false
+		open: false
 	};
 
 	onClickId = (e, id, i) => {
@@ -26,6 +26,7 @@ class Main extends React.Component {
 				selectedPost: selPost
 			};
 		});
+
 		if (e.target.getAttribute("data-set") === "remove") {
 			const filtered = this.state.loadedPosts.filter((val, ind) => {
 				return i !== ind;
@@ -61,9 +62,22 @@ class Main extends React.Component {
 		console.log(selPost[i]);
 	};
 
-	showModal = () => {
-		const sFavs = this.state.show;
-		this.setState({ show: !sFavs });
+	clickHanlder = () => {
+		console.log("open");
+		const shouldOpen = this.state.open;
+		this.setState(() => {
+			return {
+				open: !shouldOpen
+			};
+		});
+	};
+	closeModal = () => {
+		const shouldOpen = this.state.open;
+		this.setState(() => {
+			return {
+				open: !shouldOpen
+			};
+		});
 	};
 
 	componentDidMount() {
@@ -107,7 +121,7 @@ class Main extends React.Component {
 		return !this.state.err ? (
 			<div>
 				<div className="showF">
-					<button onClick={this.showModal} disabled={!this.state.favs}>
+					<button onClick={this.clickHanlder} disabled={!this.state.favs}>
 						show favorites
 					</button>
 					{!this.state.favs ? null : <span>{this.state.favs}</span>}
@@ -119,7 +133,7 @@ class Main extends React.Component {
 				) : (
 					<SelectedPost getId={this.onSendPost} {...this.state.selectedPost} />
 				)}
-				<FavModal show={this.state.show} />
+				<FavModal open={this.state.open} close={this.closeModal} />
 			</div>
 		) : (
 			<h2>sorry a error occured</h2>
